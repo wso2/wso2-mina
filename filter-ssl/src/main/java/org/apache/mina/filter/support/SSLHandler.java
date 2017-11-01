@@ -348,6 +348,7 @@ public class SSLHandler {
         // buffer.
         outNetBuffer.clear();
 
+        int bufferExpansionCount = 0;
         // Loop until there is no more data in src
         while (src.hasRemaining()) {
 
@@ -356,8 +357,8 @@ public class SSLHandler {
                 // We have to expand outNetBuffer
                 // Note: there is no way to know the exact size required, but enrypted data
                 // shouln't need to be larger than twice the source data size?
-                outNetBuffer = SSLByteBufferPool.expandBuffer(outNetBuffer, src
-                        .capacity() * 2);
+                outNetBuffer = SSLByteBufferPool.expandBuffer(outNetBuffer, src.capacity() * 2);
+                bufferExpansionCount++;
                 if (SessionLog.isDebugEnabled(session)) {
                     SessionLog.debug(session, " expanded outNetBuffer:"
                             + outNetBuffer);
@@ -373,6 +374,9 @@ public class SSLHandler {
                 if (result.getHandshakeStatus() == SSLEngineResult.HandshakeStatus.NEED_TASK) {
                     doTasks();
                 }
+            } else if (result.getStatus() == SSLEngineResult.Status.BUFFER_OVERFLOW && bufferExpansionCount < 3) {
+            	outNetBuffer = SSLByteBufferPool.expandBuffer(outNetBuffer, outNetBuffer.capacity() * 2);
+            	bufferExpansionCount++;
             } else {
                 throw new SSLException("SSLEngine error during encrypt: "
                         + result.getStatus() + " src: " + src
