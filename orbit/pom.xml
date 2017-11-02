@@ -20,14 +20,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>org.wso2.mina</groupId>
+        <groupId>org.wso2.org.apache.mina</groupId>
         <artifactId>mina-parent</artifactId>
         <version>1.1.7-wso2v1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.orbit.mina</groupId>
+    <groupId>org.wso2.orbit.org.apache.mina</groupId>
     <artifactId>mina-all</artifactId>
     <packaging>bundle</packaging>
     <name>MINA- WSO2 Orbit</name>
@@ -41,7 +41,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.mina</groupId>
+            <groupId>org.wso2.org.apache.mina</groupId>
             <artifactId>mina-core</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
@@ -65,7 +65,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.wso2.mina</groupId>
+            <groupId>org.wso2.org.apache.mina</groupId>
             <artifactId>mina-filter-ssl</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
@@ -77,7 +77,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.wso2.mina</groupId>
+            <groupId>org.wso2.org.apache.mina</groupId>
             <artifactId>mina-filter-codec-netty</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
@@ -93,7 +93,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.wso2.mina</groupId>
+            <groupId>org.wso2.org.apache.mina</groupId>
             <artifactId>mina-filter-compression</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
@@ -117,7 +117,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.wso2.mina</groupId>
+            <groupId>org.wso2.org.apache.mina</groupId>
             <artifactId>mina-integration-spring</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
@@ -153,7 +153,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.wso2.mina</groupId>
+            <groupId>org.wso2.org.apache.mina</groupId>
             <artifactId>mina-integration-jmx</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
