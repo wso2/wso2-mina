@@ -25,7 +25,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.apache.mina</groupId>
+    <groupId>org.wso2.mina</groupId>
     <artifactId>mina-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.1.7-wso2v1-SNAPSHOT</version>
