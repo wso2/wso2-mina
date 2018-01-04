@@ -31,6 +31,8 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
@@ -97,6 +99,16 @@ public class SSLHandler {
     private boolean handshakeComplete;
 
     private boolean writingEncryptedData;
+
+    /**
+     * A lock to protect the SSL flush of events
+     */
+    private ReentrantLock sslLock = new ReentrantLock();
+
+    /**
+     * A counter of schedules events
+     */
+    private final AtomicInteger scheduled_events = new AtomicInteger(0);
 
     /**
      * Constuctor.
@@ -244,23 +256,24 @@ public class SSLHandler {
     }
 
     public void flushScheduledEvents() {
-        // Fire events only when no lock is hold for this handler.
-        if (Thread.holdsLock(this)) {
-            return;
-        }
-
-        Event e;
-
-        // We need synchronization here inevitably because filterWrite can be
-        // called simultaneously and cause 'bad record MAC' integrity error.
-        synchronized (this) {
-            while ((e = filterWriteEventQueue.poll()) != null) {
-                e.nextFilter.filterWrite(session, (WriteRequest) e.data);
+        scheduled_events.incrementAndGet();
+        // Fire events only when the lock is available for this handler.
+        if (sslLock.tryLock()) {
+            Event e;
+            try {
+                do {
+                    // We need synchronization here inevitably because filterWrite can be
+                    // called simultaneously and cause 'bad record MAC' integrity error.
+                    while ((e = filterWriteEventQueue.poll()) != null) {
+                        e.nextFilter.filterWrite(session, (WriteRequest) e.data);
+                    }
+                    while ((e = messageReceivedEventQueue.poll()) != null) {
+                        e.nextFilter.messageReceived(session, e.data);
+                    }
+                } while (scheduled_events.decrementAndGet() > 0);
+            } finally {
+                sslLock.unlock();
             }
-        }
-
-        while ((e = messageReceivedEventQueue.poll()) != null) {
-            e.nextFilter.messageReceived(session, e.data);
         }
     }
 
