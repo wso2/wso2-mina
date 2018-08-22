@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.org.apache.mina</groupId>
         <artifactId>mina-parent</artifactId>
-        <version>1.1.7-wso2v4-SNAPSHOT</version>
+        <version>1.1.7-wso2v4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,7 +30,7 @@
     <artifactId>mina-all</artifactId>
     <packaging>bundle</packaging>
     <name>MINA- WSO2 Orbit</name>
-    <version>1.1.7-wso2v4-SNAPSHOT</version>
+    <version>1.1.7-wso2v4</version>
     <description>
         MINA (Multipurpose Infrastructure for Network Applications) is a
         network application framework which helps users develop high
