@@ -19,6 +19,8 @@
  */
 package org.wso2.org.apache.mina.filter;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLException;
@@ -131,6 +133,9 @@ public class SSLFilter extends IoFilterAdapter {
 
     private static final String SSL_HANDLER = SSLFilter.class.getName()
             + ".SSLHandler";
+
+    public static final String PEER_ADDRESS = SSLFilter.class.getName()
+            + ".PeerAddress";
     
     // SSL Context
     private SSLContext sslContext;
@@ -327,6 +332,13 @@ public class SSLFilter extends IoFilterAdapter {
 
         IoSession session = parent.getSession();
         session.setAttribute(NEXT_FILTER, nextFilter);
+
+        SocketAddress remoteAddress = session.getRemoteAddress();
+
+        if (remoteAddress instanceof InetSocketAddress) {
+            // activate the SNI support in the JSSE SSLEngine
+            session.setAttribute(PEER_ADDRESS, remoteAddress);
+        }
 
         // Create an SSL handler and start handshake.
         SSLHandler handler = new SSLHandler(this, sslContext, session);
