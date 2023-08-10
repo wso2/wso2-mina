@@ -26,6 +26,7 @@ import org.wso2.org.apache.mina.filter.SSLFilter;
 import org.wso2.org.apache.mina.util.SessionLog;
 import org.wso2.org.apache.mina.common.IoFilter;
 
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -126,8 +127,15 @@ public class SSLHandler {
         if (sslEngine != null) {
             return;
         }
+        
+        InetSocketAddress peer = (InetSocketAddress) session.getAttribute(SSLFilter.PEER_ADDRESS);
 
-        sslEngine = ctx.createSSLEngine();
+        // Create the SSL engine here
+        if (peer == null) {
+            sslEngine = ctx.createSSLEngine();
+        } else {
+            sslEngine = ctx.createSSLEngine(peer.getHostName(), peer.getPort());
+        }
         sslEngine.setUseClientMode(parent.isUseClientMode());
 
         if (parent.isWantClientAuth()) {
